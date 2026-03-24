@@ -3,25 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mood Palette</title>
+    <title>girlsMOOD</title>
     <style>
-        /* --- НАСТРОЙКИ --- */
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
 
         :root {
-            --bg-color: #111;
+            --bg-color: #0a0a0a;
             --text-color: #ffffff;
-            --accent-color: #ffffff; /* Основной цвет свечения */
-            --cursor-size: 500px;
+            --accent-color: #ffffff;
+            --cursor-size: 550px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            cursor: none;
-            user-select: none;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; user-select: none; }
 
         body {
             background-color: var(--bg-color);
@@ -33,422 +26,334 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: background-color 0.8s ease;
+            transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* --- ШУМ (Low Opacity) --- */
+        body::after {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
+            pointer-events: none; z-index: 1;
+        }
+
         .noise {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 100;
-            opacity: 0.02; /* Снижено по просьбе */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 100; opacity: 0.03;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
         }
 
-        /* --- КУРСОР --- */
         .cursor-glow {
-            position: fixed;
-            width: var(--cursor-size);
-            height: var(--cursor-size);
+            position: fixed; width: var(--cursor-size); height: var(--cursor-size);
             background: radial-gradient(circle, var(--accent-color) 0%, rgba(255,255,255,0) 65%);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            mix-blend-mode: soft-light;
-            z-index: 0;
-            opacity: 0.5;
+            border-radius: 50%; transform: translate(-50%, -50%);
+            pointer-events: none; mix-blend-mode: soft-light; z-index: 0; opacity: 0.5;
             transition: background 0.5s ease;
         }
 
         .cursor-dot {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: white;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 101;
-            mix-blend-mode: exclusion;
+            position: fixed; width: 10px; height: 10px; background: white; border-radius: 50%;
+            transform: translate(-50%, -50%); pointer-events: none; z-index: 101; mix-blend-mode: exclusion;
         }
 
-        /* --- КАРТОЧКА --- */
-        .card-container {
-            perspective: 1000px;
-            z-index: 10;
+        .main-title {
+            font-size: 2.4rem; font-weight: 700; letter-spacing: -0.04em;
+            margin-bottom: 2.2rem; opacity: 0.9; z-index: 10; text-transform: lowercase;
         }
+
+        .controls-top {
+            position: fixed; top: 40px; display: flex; align-items: center; gap: 20px; z-index: 110;
+            background: rgba(255, 255, 255, 0.08); padding: 10px 25px; border-radius: 50px;
+            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15);
+        }
+        .cnt-btn { 
+            background: none; border: none; color: white; 
+            font-size: 1.8rem; cursor: none; opacity: 0.5; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+            line-height: 1; width: 30px; height: 30px;
+        }
+        .cnt-btn:hover { opacity: 1; transform: scale(1.3); }
+        .count-num { font-weight: 700; font-size: 1.2rem; min-width: 30px; text-align: center; }
+
+        .cnt-btn { 
+            background: none; border: none; color: white; 
+            font-size: 2.2rem; width: 45px; height: 45px; 
+            opacity: 0.6; transition: 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .cnt-btn:hover { opacity: 1; transform: scale(1.2); }
 
         .card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 3rem 4rem;
-            border-radius: 32px;
-            text-align: center;
-            box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.6);
-            transform-style: preserve-3d;
-            width: 90vw;
-            max-width: 550px;
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 2.5rem 2.5rem 3.5rem; border-radius: 45px; text-align: center;
+            box-shadow: 0 40px 90px -15px rgba(0, 0, 0, 0.6);
+            width: 90vw; max-width: 520px; z-index: 10;
+            transform-style: preserve-3d; transition: transform 0.1s ease-out;
         }
 
-        /* Секция с тремя кружками */
-        .palette-selector {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 2rem;
+        .harmony-label {
+            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em;
+            margin-bottom: 1.5rem; font-weight: 700; transition: all 0.3s;
         }
 
-        .color-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: none; /* Кастомный курсор */
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
-            position: relative;
-        }
+        .palette-selector { display: flex; justify-content: center; gap: 18px; margin-bottom: 2.5rem; }
+        .color-circle { width: 55px; height: 55px; border-radius: 50%; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); border: 2px solid rgba(255,255,255,0.1); }
+        .color-circle.active { transform: scale(1.3); border-color: white; box-shadow: 0 0 30px var(--accent-color); }
+
+        h1 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.3em; opacity: 0.6; margin-bottom: 0.5rem; }
         
-        /* Активный кружок чуть больше и с обводкой */
-        .color-circle.active {
-            transform: scale(1.3);
-            box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
-            z-index: 2;
-        }
-
-        .color-circle:hover {
-            transform: scale(1.15);
-        }
-        .color-circle.active:hover {
-            transform: scale(1.35);
-        }
-
-        /* Текстовая часть */
-        h1 {
-            font-size: 1.8rem; /* Увеличили название цвета */
-            font-weight: 700;
-            margin-bottom: 0.2rem;
-            letter-spacing: -0.02em;
-        }
-
-        .hex-wrapper {
-            position: relative;
-            display: inline-block;
-            margin: 1rem 0;
-        }
-
-        .hex-code {
-            font-size: 3rem;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-            opacity: 0.9;
-            transition: transform 0.2s, text-shadow 0.2s;
-        }
+        .tag-wrapper { position: relative; display: inline-block; transition: 0.3s; }
+        .tag-display { font-size: 3.2rem; font-weight: 700; margin: 0.5rem 0 1.5rem 0; line-height: 1; letter-spacing: -0.03em; transition: 0.2s; }
         
-        .hex-code:hover {
-            transform: scale(1.02);
-            text-shadow: 0 0 30px var(--accent-color);
+        .copy-toast {
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%) translateY(10px);
+            background: white; color: black; padding: 4px 12px; border-radius: 20px;
+            font-size: 0.7rem; font-weight: 800; opacity: 0; pointer-events: none;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .tag-wrapper.copied .copy-toast { opacity: 1; transform: translateX(-50%) translateY(-20px); }
+        
+        .tag-jump { animation: tag-jump-anim 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes tag-jump-anim {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1) translateY(-5px); }
         }
 
-        .description {
-            font-size: 1rem;
-            line-height: 1.5;
-            opacity: 0.6;
-            max-width: 400px;
-            margin: 0 auto;
-        }
+        .description { font-size: 1.2rem; line-height: 1.5; opacity: 0.85; font-weight: 300; min-height: 3.6rem; }
 
-        /* Уведомление COPIED */
-        .notification {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(10px);
-            background: rgba(255,255,255,0.9);
-            color: #000;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-        }
-
-        .hex-wrapper.copied .notification {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* --- КНОПКА R (RELOAD) --- */
-        .reload-container {
-            margin-top: 3rem;
-            z-index: 10;
-            display: flex;
-            flex-direction: row;
-            align-items: center; 
-            justify-content: center;
-        }
-
+        .reload-container { margin-top: 2.5rem; display: flex; align-items: center; gap: 15px; z-index: 10; }
         .btn-reload {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: transparent;
-            color: white;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            cursor: none; /* Снова кастомный курсор */
+            width: 50px; height: 50px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white;
+            transition: 0.3s; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
         }
-
-        .btn-reload:hover {
-            background: rgba(255,255,255,0.1);
-            transform: rotate(180deg);
-            border-color: rgba(255,255,255,0.6);
-        }
-
-        .hint {
-            margin-left: 10px;
-            font-size: 0.7rem;
-            opacity: 0.3;
-            text-align: right;
+        
+        .is-spinning { animation: spin-btn 0.6s cubic-bezier(0.4, 0, 0.2, 1); border-color: white !important; box-shadow: 0 0 20px white; }
+        .is-shaking { animation: shake-card 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both !important; }
+        
+        @keyframes spin-btn { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes shake-card {
+            0%, 100% { transform: perspective(1000px) rotateX(0) rotateY(0) scale(1); }
+            25% { transform: perspective(1000px) rotateX(8deg) rotateY(-8deg) scale(0.98); }
+            75% { transform: perspective(1000px) rotateX(-8deg) rotateY(8deg) scale(0.98); }
         }
 
         @media (max-width: 600px) {
-            .hex-code { font-size: 2.5rem; }
-            .card { padding: 2rem; width: 95%; }
+            .tag-display { font-size: 2.2rem; } .main-title { font-size: 1.6rem; }
+            .cursor-glow, .cursor-dot { display: none; }
             * { cursor: auto; }
-            .cursor-dot, .cursor-glow { display: none; }
+        }
+        .footer-credits {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            opacity: 0.3;
+            z-index: 10;
+            pointer-events: none;
+            text-align: center;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
 
     <div class="noise"></div>
-    <div class="cursor-glow" id="glow"></div>
-    <div class="cursor-dot" id="dot"></div>
+    <div id="glow" class="cursor-glow"></div>
+    <div id="dot" class="cursor-dot"></div>
 
-    <div class="card-container">
-        <div class="card" id="card">
-            
-            <div class="palette-selector" id="paletteSelector">
-                </div>
+<div class="controls-top">
+        <button class="cnt-btn" id="minus" style="font-size: 2.2rem; margin-top: -4px;">-</button>
+        <div class="count-num" id="count">3</div>
+        <button class="cnt-btn" id="plus">+</button>
+    </div>
 
-            <h1 id="colorName">Loading...</h1>
-            
-            <div class="hex-wrapper" id="hexWrapper">
-                <div class="hex-code" id="hexCode">#......</div>
-                <div class="notification">COPIED</div>
-            </div>
-            
-            <p class="description" id="colorDesc">...</p>
+    <h2 class="main-title">мои мудлеты на сегодня</h2>
+
+    <div class="card" id="card">
+        <div class="harmony-label" id="harmony">уровень гармонии: —</div>
+        <div class="palette-selector" id="selector"></div>
+        <h1>Сегодня я...</h1>
+        <div class="tag-wrapper" id="tagWrapper">
+            <div class="tag-display" id="tag">#vibes</div>
+            <div class="copy-toast">COPIED!</div>
         </div>
+        <p class="description" id="desc">...</p>
     </div>
 
     <div class="reload-container">
-        <button class="btn-reload" id="reloadBtn">R</button>
-        <div class="hint">press R to shuffle</div>
+        <button class="btn-reload" id="reload">R</button>
+        <div style="font-size: 0.75rem; opacity: 0.4; letter-spacing: 0.05em;">не устраивают мудлеты? жми R, чтобы перемешать</div> 
     </div>
 
     <script>
-        // --- 1. БАЗА ПАЛИТР (По 3 оттенка в каждой) ---
-        const palettes = [
-            {
-                id: "cyber",
-                colors: [
-                    { name: "Neon Plasma", hex: "#7209B7", desc: "Высоковольтный фиолетовый. Энергия ночного города." },
-                    { name: "Cyber Grape", hex: "#560BAD", desc: "Глубокий и насыщенный. Цвет цифровых теней." },
-                    { name: "Electric Blue", hex: "#4361EE", desc: "Яркий разряд молнии в темном небе." }
-                ]
-            },
-            {
-                id: "sunset",
-                colors: [
-                    { name: "Solar Flare", hex: "#FF4D4D", desc: "Ослепительная вспышка закатного солнца." },
-                    { name: "Hot Coral", hex: "#FF9F1C", desc: "Теплый песок и нагретая солнцем кожа." },
-                    { name: "Golden Hour", hex: "#FFBF69", desc: "Самое фотогеничное время суток в цвете." }
-                ]
-            },
-            {
-                id: "forest",
-                colors: [
-                    { name: "Deep Moss", hex: "#2D6A4F", desc: "Тишина старого леса после дождя." },
-                    { name: "Sage Leaf", hex: "#52B788", desc: "Свежесть, спокойствие и природный баланс." },
-                    { name: "Mint Frost", hex: "#D8F3DC", desc: "Холодное утро на траве." }
-                ]
-            },
-            {
-                id: "ocean",
-                colors: [
-                    { name: "Abyss", hex: "#03045E", desc: "Тьма на дне Марианской впадины." },
-                    { name: "Greek Blue", hex: "#0077B6", desc: "Крыши Санторини и бесконечный горизонт." },
-                    { name: "Pacific Cyan", hex: "#90E0EF", desc: "Прозрачная вода тропической лагуны." }
-                ]
-            },
-            {
-                id: "mono",
-                colors: [
-                    { name: "Carbon", hex: "#212529", desc: "Строгий, бескомпромиссный графит." },
-                    { name: "Concrete", hex: "#6C757D", desc: "Индустриальная эстетика мегаполиса." },
-                    { name: "Smoke", hex: "#CED4DA", desc: "Легкий туман над серым городом." }
-                ]
-            },
-            {
-                id: "berry",
-                colors: [
-                    { name: "Dark Cherry", hex: "#590D22", desc: "Вкус дорогого вина и бархата." },
-                    { name: "Lipstick Red", hex: "#A4133C", desc: "Страсть, драма и классика." },
-                    { name: "Rose Sorbet", hex: "#FF4D6D", desc: "Сладкий, дерзкий и молодежный." }
-                ]
+        const rawConfig = `
+        digital | #7209B7, #560BAD, #4361EE | #в_потоке, #digital_bitch, #электрическая | Ебашу как не в себя.; Всех мужиков в игнор.; Заряжена на успех.
+        danger  | #FF4D4D, #FF9F1C, #FF5400 | #горячая, #fire_inside, #critical_day    | Да я сама бы себя трахнула.; ДАЙТЕ МНЕ МУЖИКА!!!; Ненавижу всех.
+        bitch   | #590D22, #A4133C, #FF4D6D | #самая_пиздатая, #queen_energy, #разъеб | Сегодня я разъебу всех!; Тяжело быть самой пиздатой, но я привыкла.; Всех и вся.
+        zen     | #2D6A4F, #52B788, #1B4332 | #кайф, #дзен, #deep_forest           | На спокойном вайбе.; В гармонии с миром.; Я - само спокойствие.
+        soft    | #FFC8DD, #FFAAFE, #BDE0FE | #angel_face, #зефирная, #солнышко          | Слишком милая.; Вот бы кто-нибудь меня поджарил...; Воплощение нежности.
+        money   | #004B23, #38B000, #CCFF33 | #money_moves, #rich_vibe, #дорого        | Алло, это деньги.; Не смотрю на ценники.; Да, это про меня.
+        night   | #0F0C29, #302B63, #24243E | #midnight, #dark_matter, #скрытая        | Дела делаются ночью.; Тьма мне к лицу.; Не знакомлюсь, не общаюсь.
+        acid    | #CCFF00, #10FF00, #FF00FF | #acid_trip, #toxizz, #неоновая           | Я ебанулась.; Я хуже ебучей гадюки.; Шлюший вайб.
+        nordic  | #D9D9D9, #8D99AE, #EDF2F4 | #холодная, #ice_queen, #минимализм       | -36.6 по Цельсию.; Ничего личного, все просто долбоебы; Да мне как-то похуй.
+        `;
+
+        
+        const moodLibrary = rawConfig.trim().split('\n').map(line => {
+            const [id, colors, tags, quotes] = line.split('|').map(part => part.trim());
+            return {
+                id: id,
+                colors: colors.split(',').map(c => c.trim()),
+                tags: tags.split(',').map(t => t.trim()),
+                quotes: quotes.split(';').map(q => q.trim())
+            };
+        });
+
+        let activeCircles = []; 
+        let numCircles = 3;
+        let isAnimating = false;
+        let cursorSize = 550;
+        const harmonyChance = 0.25; // 25% шанс на идеальную гармонию
+
+        function shuffleMoods() {
+            activeCircles = [];
+            const isIdeal = Math.random() < harmonyChance;
+
+            if (isIdeal) {
+                // ИДЕАЛЬНАЯ ГАРМОНИЯ: все из одного набора
+                const set = moodLibrary[Math.floor(Math.random() * moodLibrary.length)];
+                for (let i = 0; i < numCircles; i++) {
+                    const idx = i % set.colors.length; // Берем разные цвета из одного набора
+                    activeCircles.push({ setId: set.id, color: set.colors[idx], tag: set.tags[idx], quote: set.quotes[idx % set.quotes.length] });
+                }
+            } else {
+                // ОБЫЧНЫЙ МИКС: стараемся без дублей
+                let attempts = 0;
+                while (activeCircles.length < numCircles && attempts < 100) {
+                    const set = moodLibrary[Math.floor(Math.random() * moodLibrary.length)];
+                    const idx = Math.floor(Math.random() * set.colors.length);
+                    const color = set.colors[idx];
+                    
+                    if (!activeCircles.find(c => c.color === color) || attempts > 50) {
+                        activeCircles.push({ setId: set.id, color, tag: set.tags[idx], quote: set.quotes[idx % set.quotes.length] });
+                    }
+                    attempts++;
+                }
             }
-        ];
+            calculateHarmony();
+            render();
+        }
 
-        // --- 2. ЛОГИКА ---
-        let currentPaletteIndex = 0;
-        let selectedColorIndex = 1; // По умолчанию выбираем средний цвет
+        function calculateHarmony() {
+            const counts = {};
+            activeCircles.forEach(c => counts[c.setId] = (counts[c.setId] || 0) + 1);
+            const maxSame = Math.max(...Object.values(counts));
+            const el = document.getElementById('harmony');
+            
+            if (maxSame === numCircles) {
+                el.textContent = "уровень гармонии: идеально"; el.style.color = "#00ff88";
+            } else if (maxSame >= numCircles / 2) {
+                el.textContent = "уровень гармонии: сойдет"; el.style.color = "#ffaa00";
+            } else {
+                el.textContent = "уровень гармонии: пиздец"; el.style.color = "#ff4444";
+            }
+        }
 
-        const elements = {
-            card: document.getElementById('card'),
-            selector: document.getElementById('paletteSelector'),
-            name: document.getElementById('colorName'),
-            hex: document.getElementById('hexCode'),
-            hexWrapper: document.getElementById('hexWrapper'),
-            desc: document.getElementById('colorDesc'),
-            glow: document.getElementById('glow'),
-            reloadBtn: document.getElementById('reloadBtn'),
-            root: document.documentElement
+        function render() {
+            const selector = document.getElementById('selector');
+            selector.innerHTML = '';
+            document.getElementById('count').textContent = numCircles;
+            activeCircles.forEach((data, i) => {
+                const circle = document.createElement('div');
+                circle.className = 'color-circle';
+                circle.style.backgroundColor = data.color;
+                circle.onclick = () => { previewMood(data); document.body.style.backgroundColor = data.color; };
+                circle.onmouseenter = () => previewMood(data);
+                selector.appendChild(circle);
+                if (i === 0) previewMood(data);
+            });
+        }
+
+        function previewMood(data) {
+            document.getElementById('tag').textContent = data.tag;
+            document.getElementById('desc').textContent = data.quote;
+            document.documentElement.style.setProperty('--accent-color', data.color);
+            document.querySelectorAll('.color-circle').forEach(c => {
+                const bg = c.style.backgroundColor;
+                c.classList.toggle('active', bg === data.color || bg === hexToRgb(data.color));
+            });
+        }
+
+        function hexToRgb(hex) {
+            const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // Взаимодействия
+        document.getElementById('tagWrapper').onclick = function() {
+            navigator.clipboard.writeText(document.getElementById('tag').textContent);
+            this.classList.add('copied');
+            document.getElementById('tag').classList.add('tag-jump');
+            document.getElementById('card').classList.add('is-shaking');
+            setTimeout(() => {
+                this.classList.remove('copied');
+                document.getElementById('tag').classList.remove('tag-jump');
+                document.getElementById('card').classList.remove('is-shaking');
+            }, 600);
         };
 
-        function getRandomPalette() {
-            let newIndex;
-            do {
-                newIndex = Math.floor(Math.random() * palettes.length);
-            } while (newIndex === currentPaletteIndex); // Чтобы не повторялась та же самая
-            return newIndex;
-        }
+        const shuffleAction = () => {
+            if(isAnimating) return;
+            isAnimating = true;
+            document.getElementById('reload').classList.add('is-spinning');
+            document.getElementById('card').classList.add('is-shaking');
+            document.body.style.backgroundColor = 'var(--bg-color)';
+            setTimeout(() => {
+                document.getElementById('reload').classList.remove('is-spinning');
+                document.getElementById('card').classList.remove('is-shaking');
+                shuffleMoods();
+                isAnimating = false;
+            }, 500);
+        };
 
-        function renderPalette(paletteIndex) {
-            currentPaletteIndex = paletteIndex;
-            const palette = palettes[currentPaletteIndex];
-            
-            // Очищаем кружки
-            elements.selector.innerHTML = '';
-
-            // Создаем 3 кружка
-            palette.colors.forEach((color, index) => {
-                const circle = document.createElement('div');
-                circle.classList.add('color-circle');
-                circle.style.backgroundColor = color.hex;
-                
-                // Обработчик клика/наведения
-                circle.addEventListener('mouseenter', () => selectColor(index));
-                circle.addEventListener('click', () => selectColor(index)); // Для тачскринов
-
-                elements.selector.appendChild(circle);
-            });
-
-            // Выбираем средний цвет по умолчанию при смене палитры
-            selectColor(1);
-        }
-
-        function selectColor(index) {
-            selectedColorIndex = index;
-            const palette = palettes[currentPaletteIndex];
-            const colorData = palette.colors[index];
-            const circles = document.querySelectorAll('.color-circle');
-
-            // 1. Визуал активного кружка
-            circles.forEach((c, i) => {
-                if (i === index) c.classList.add('active');
-                else c.classList.remove('active');
-            });
-
-            // 2. Тексты
-            elements.name.textContent = colorData.name;
-            elements.hex.textContent = colorData.hex;
-            elements.desc.textContent = colorData.desc;
-
-            // 3. Цвета темы (CSS переменные)
-            elements.root.style.setProperty('--accent-color', colorData.hex);
-            
-            // Фон делаем очень темным вариантом выбранного цвета (для атмосферы)
-            // Но чтобы не усложнять JS конвертацией hex->rgb, оставим просто темный фон,
-            // а свечение (glow) будет давать нужный оттенок.
-        }
-
-        function init() {
-            renderPalette(getRandomPalette());
-        }
-
-        // Кнопка R (Reload)
-        function reload() {
-            // Эффект вращения кнопки
-            elements.reloadBtn.style.transform = 'rotate(360deg)';
-            setTimeout(() => elements.reloadBtn.style.transform = 'rotate(0deg)', 400);
-            
-            renderPalette(getRandomPalette());
-        }
-
-        elements.reloadBtn.addEventListener('click', reload);
-        
-        // Глобальный хоткей R
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'KeyR') reload();
+        window.addEventListener('wheel', (e) => {
+            cursorSize = e.deltaY < 0 ? Math.min(1200, cursorSize + 40) : Math.max(100, cursorSize - 40);
+            document.documentElement.style.setProperty('--cursor-size', cursorSize + 'px');
         });
 
+        document.getElementById('reload').onclick = shuffleAction;
+        document.addEventListener('keydown', e => { if(e.code === 'KeyR') shuffleAction(); });
+        document.getElementById('plus').onclick = () => { if(numCircles < 6) { numCircles++; shuffleMoods(); } };
+        document.getElementById('minus').onclick = () => { if(numCircles > 1) { numCircles--; shuffleMoods(); } };
 
-        // --- 3. ИНТЕРАКТИВ (Копирование) ---
-        elements.hexWrapper.addEventListener('click', () => {
-            const hex = elements.hex.textContent;
-            navigator.clipboard.writeText(hex).then(() => {
-                elements.hexWrapper.classList.add('copied');
-                setTimeout(() => elements.hexWrapper.classList.remove('copied'), 1500);
-            });
+        // Курсор и наклон
+        let mX = 0, mY = 0, gX = 0, gY = 0, dX = 0, dY = 0;
+        document.addEventListener('mousemove', e => {
+            mX = e.clientX; mY = e.clientY;
+            if(!isAnimating) {
+                const rX = (window.innerHeight/2 - mY)/35, rY = (mX - window.innerWidth/2)/35;
+                document.getElementById('card').style.transform = `perspective(1000px) rotateX(${rX}deg) rotateY(${rY}deg)`;
+            }
         });
 
-
-        // --- 4. ФИЗИКА (Курсор и наклон) ---
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
-        let glowX = mouseX, glowY = mouseY;
-        let dotX = mouseX, dotY = mouseY;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-
-            // Наклон карточки
-            const rotateX = (window.innerHeight / 2 - mouseY) / 30;
-            const rotateY = (mouseX - window.innerWidth / 2) / 30; // Инвертировал для естественности
-            elements.card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        });
-
-        function animate() {
-            glowX += (mouseX - glowX) * 0.1;
-            glowY += (mouseY - glowY) * 0.1;
-            dotX += (mouseX - dotX) * 0.3;
-            dotY += (mouseY - dotY) * 0.3;
-
-            elements.glow.style.left = `${glowX}px`;
-            elements.glow.style.top = `${glowY}px`;
-            
-            const dot = document.getElementById('dot');
-            dot.style.left = `${dotX}px`;
-            dot.style.top = `${dotY}px`;
-
-            requestAnimationFrame(animate);
+        function anim() {
+            gX += (mX - gX) * 0.12; gY += (mY - gY) * 0.12;
+            dX += (mX - dX) * 0.3; dY += (mY - dY) * 0.3;
+            document.getElementById('glow').style.left = gX + 'px';
+            document.getElementById('glow').style.top = gY + 'px';
+            document.getElementById('dot').style.left = dX + 'px';
+            document.getElementById('dot').style.top = dY + 'px';
+            requestAnimationFrame(anim);
         }
-        animate();
 
-        // Запуск
-        init();
-
+        anim();
+        shuffleMoods();
     </script>
+<div class="footer-credits">
+    made by g4mak3r<br>
+    special for his endless love, Alice
+</div>
 </body>
 </html>
