@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090b">
+  <meta name="description" content="moodPalette — интерактивный генератор цветовых настроений.">
+  <title>moodPalette — chromatic mood generator</title>
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="scene" aria-hidden="true">
+    <div class="scene__mesh"></div>
+    <div class="scene__orb scene__orb--primary"></div>
+    <div class="scene__orb scene__orb--secondary"></div>
+    <div class="scene__vignette"></div>
+    <div class="scene__noise"></div>
+  </div>
+
+  <div class="cursor cursor--dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor cursor--halo" id="cursorHalo" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="moodPalette — home" data-i18n-aria="brandHome" data-cursor-morph>
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span>moodPalette</span>
+    </a>
+    <div class="language-switcher" data-language-switcher>
+      <button class="language-switcher__trigger" type="button" aria-haspopup="menu" aria-expanded="false" data-cursor-morph>
+        <span>Eng</span>
+        <span class="language-switcher__chevron" aria-hidden="true">⌄</span>
+      </button>
+      <div class="language-switcher__menu" role="menu" aria-label="Interface language" data-i18n-aria="languageMenu">
+        <button class="language-switcher__option" type="button" role="menuitem" data-cursor-morph>Рус</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="intro" aria-labelledby="pageTitle">
+      <p class="intro__eyebrow">chromatic mood generator</p>
+      <h1 class="intro__title" id="pageTitle" data-i18n-html="title">my moodlets<br>for today</h1>
+      <p class="intro__copy" data-i18n="introCopy">Collect one to six shades and see what mood finds you today.</p>
+    </section>
+
+    <section class="mood-card" id="moodCard" aria-live="polite">
+      <div class="mood-card__shine" aria-hidden="true"></div>
+
+      <div class="mood-card__topline">
+        <div class="color-spec">
+          <span class="ui-label color-spec__group" id="moodCategory">GROUP / ELECTRIC BLUE</span>
+          <div class="color-spec__meta" aria-label="Текущий цвет">
+            <span class="color-spec__dot" aria-hidden="true"></span>
+            <button class="color-copy-button color-copy-button--name" id="colorNameButton" type="button" aria-label="Скопировать название цвета" data-cursor-morph>
+              <span id="colorName">electric blue</span>
+              <span class="copy-popover" data-copy-popover aria-hidden="true">название скопировано</span>
+            </button>
+            <span class="color-spec__separator" aria-hidden="true">・</span>
+            <button class="color-copy-button color-copy-button--hex" id="colorHexButton" type="button" aria-label="Скопировать HEX-код цвета" data-cursor-morph>
+              <span id="colorHex">#4361EE</span>
+              <span class="copy-popover" data-copy-popover aria-hidden="true">#4361EE скопирован</span>
+            </button>
+          </div>
+        </div>
+        <span class="mood-index" id="moodIndex">01 / 03</span>
+      </div>
+
+      <div class="palette" id="palette" role="group" aria-label="Choose a moodlet" data-i18n-aria="paletteLabel"></div>
+
+      <div class="mood-content">
+        <p class="ui-label" data-i18n="todayIAm">today I am</p>
+
+        <button class="tag-button" id="tagButton" type="button" aria-label="Скопировать хештег" data-cursor-morph>
+          <span class="tag" id="tag">#в_потоке</span>
+          <span class="copy-popover" data-copy-popover aria-hidden="true">хештег скопирован</span>
+        </button>
+
+        <p class="quote" id="quote">Сегодня все складывается.</p>
+      </div>
+
+      <div class="mood-card__footer">
+        <span class="ui-label">hover to explore · click to remove</span>
+        <span class="mood-card__rule" aria-hidden="true"></span>
+        <span class="ui-label">tap the tag to copy</span>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="Generator controls" data-i18n-aria="controlsLabel">
+      <button class="shuffle-button" id="shuffleButton" type="button" data-cursor-morph>
+        <span class="shuffle-button__icon" aria-hidden="true" data-cursor-morph data-cursor-nested>
+          <img class="shuffle-button__glyph" src="assets/shuffle.svg" alt="" width="20" height="20">
+        </span>
+        <span>
+          <span class="shuffle-button__label" data-i18n="shuffle">shuffle</span>
+          <span class="shuffle-button__hint" data-i18n="shuffleHint">or press R</span>
+        </span>
+      </button>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>made by <a href="https://github.com/g4mak3r" target="_blank" rel="noreferrer" data-cursor-morph><span class="footer-author">g4mak3r</span></a> · 2026</span>
+  </footer>
+
+  <div class="sr-only" id="copyLive" aria-live="polite" aria-atomic="true"></div>
+
+  <noscript>
+    <div class="noscript">Для moodPalette нужен JavaScript.</div>
+  </noscript>
+
+  <script src="color-atlas.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
